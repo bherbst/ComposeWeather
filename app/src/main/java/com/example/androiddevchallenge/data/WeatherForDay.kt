@@ -7,4 +7,10 @@ data class WeatherForDay(
   val highTemp: DegreesFahrenheit,
   val lowTemp: DegreesFahrenheit,
   val hourlyWeather: Map<HourOfDay, WeatherAtTime>
-)
+) {
+  val hourlyWeatherList by lazy {
+    hourlyWeather.entries.asSequence()
+      .sortedBy { it.key.value }
+      .toList()
+  }
+}

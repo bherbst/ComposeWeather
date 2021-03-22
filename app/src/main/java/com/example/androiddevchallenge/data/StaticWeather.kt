@@ -2,12 +2,8 @@ package com.example.androiddevchallenge.data
 
 import java.time.LocalDate
 
-val todayWeather = WeatherForDay(
-  day = LocalDate.of(
-    year = 2021, 
-    month = Month.MARCH, 
-    dayOfMonth = 22
-  ),
+val staticTodayWeather = WeatherForDay(
+  day = LocalDate.now(),
   highTemp = DegreesFahrenheit(58),
   lowTemp = DegreesFahrenheit(42),
   hourlyWeather = mapOf(
