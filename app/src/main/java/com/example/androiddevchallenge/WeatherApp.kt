@@ -18,9 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.androiddevchallenge.data.staticTodayWeather
 import com.example.androiddevchallenge.settings.Settings
 import com.example.androiddevchallenge.settings.SettingsViewModel
+import com.example.androiddevchallenge.weather.WeatherOverview
 import dev.chrisbanes.accompanist.insets.navigationBarsPadding
 import dev.chrisbanes.accompanist.insets.statusBarsPadding
 import kotlinx.coroutines.launch
@@ -55,7 +55,7 @@ fun WeatherApp() {
       )
     },
     backLayerContent = { Settings() },
-    frontLayerContent = { WeatherContent() },
+    frontLayerContent = { WeatherOverview() },
   )
 }
 
@@ -87,12 +87,4 @@ private fun AppBar(
       }
     }
   )
-}
-
-/**
- * Displays the weather for the user's current location
- */
-@Composable
-private fun WeatherContent() {
-  TodaysWeatherOverview(staticTodayWeather)
 }
