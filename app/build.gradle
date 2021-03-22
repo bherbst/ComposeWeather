@@ -55,11 +55,23 @@ android {
         kotlinCompilerExtensionVersion compose_version
     }
 
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     packagingOptions {
         // Multiple dependency bring these files in. Exclude them to enable
         // our test APK to build (has no effect on our AARs)
         excludes += "/META-INF/AL2.0"
         excludes += "/META-INF/LGPL2.1"
+    }
+}
+
+kotlin {
+    sourceSets.all {
+        languageSettings.enableLanguageFeature('InlineClasses')
     }
 }
 
@@ -75,6 +87,8 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0'
     implementation "androidx.navigation:navigation-compose:1.0.0-alpha09"
     implementation "dev.chrisbanes.accompanist:accompanist-insets:0.6.2"
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
 
     testImplementation 'junit:junit:4.13.2'
 
