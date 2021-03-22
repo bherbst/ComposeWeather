@@ -21,6 +21,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androiddevchallenge.ui.theme.WeatherTheme
 
+/**
+ * Settings UI, used in the main application backdrop.
+ *
+ * Gives the user access to their preferred weather units and location
+ */
 @Composable
 fun Settings() {
   val viewModel: SettingsViewModel = viewModel()
@@ -62,6 +67,9 @@ private fun onPrimaryTextFieldColors() = TextFieldDefaults.outlinedTextFieldColo
   focusedLabelColor = MaterialTheme.colors.secondary.copy(alpha = ContentAlpha.high)
 )
 
+/**
+ * Radio button to display a single weather unit option (e.g. Imperial or Metric)
+ */
 @Composable
 private fun UnitRadioButton(
   modifier: Modifier = Modifier,

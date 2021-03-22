@@ -10,13 +10,12 @@ class SettingsViewModel : ViewModel() {
   var location: Location by mutableStateOf(Location.Minneapolis)
 
   /**
-   * This is a silly implementation- enter "Mountain View, CA" for Mountain View, California. Everything
-   * else is interpreted as Minneapolis, MN
+   * This is a silly implementation every time the text changes we just switch the location
    */
   fun updateLocation(locationText: String) {
-    location = when (locationText) {
-      Location.MountainView.displayText -> Location.MountainView
-      else -> Location.Minneapolis
+    location = when (location) {
+      Location.MountainView -> Location.Minneapolis
+      Location.Minneapolis -> Location.MountainView
     }
   }
 }
