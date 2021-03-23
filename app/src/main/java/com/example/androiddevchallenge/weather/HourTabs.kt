@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,18 +23,26 @@ import com.example.androiddevchallenge.data.HourOfDay
 import com.example.androiddevchallenge.data.WeatherAtTime
 import com.example.androiddevchallenge.data.WeatherForDay
 import com.example.androiddevchallenge.data.staticTodayWeather
+import com.example.androiddevchallenge.extensions.fullyVisibleItemRange
 import com.example.androiddevchallenge.settings.WeatherUnits
 
 @Composable
 fun HourlyWeatherStrip(
   dailyWeather: WeatherForDay,
   units: WeatherUnits,
-  hourlyWeatherState: HourlyWeatherState,
+  activeHour: HourOfDay,
 ) {
   val scope = rememberCoroutineScope()
   val listState = rememberLazyListState()
   // TODO scroll appropriately
 //  scope.launch { listState.scrollToItem(hourlyWeatherState.activeHourIndex) }
+  LaunchedEffect(activeHour) {
+    val index = dailyWeather.hourlyWeatherList.indexOfFirst { it.key == activeHour }
+    if (index !in listState.layoutInfo.fullyVisibleItemRange) {
+      listState.animateScrollToItem(index)
+    }
+  }
+
   LazyRow(
     state = listState,
     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
@@ -44,7 +53,7 @@ fun HourlyWeatherStrip(
         hour = hour,
         weather = weather,
         units = units,
-        isActive = hour == hourlyWeatherState.activeHour
+        isActive = hour == activeHour
       )
     }
   }
@@ -93,10 +102,6 @@ private fun HourTabsPreview() {
   HourlyWeatherStrip(
     dailyWeather = staticTodayWeather,
     units = WeatherUnits.Imperial,
-    hourlyWeatherState = HourlyWeatherState(
-      activeHour = HourOfDay(11),
-      minHour = HourOfDay(10),
-      maxHour = HourOfDay(16)
-    )
+    activeHour = HourOfDay(11)
   )
 }
