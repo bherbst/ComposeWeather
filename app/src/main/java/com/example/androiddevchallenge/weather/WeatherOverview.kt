@@ -14,8 +14,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Cloud
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,14 +21,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.androiddevchallenge.R
 import com.example.androiddevchallenge.data.HourOfDay
 import com.example.androiddevchallenge.data.WeatherAtTime
 import com.example.androiddevchallenge.data.WeatherForDay
+import com.example.androiddevchallenge.data.WeatherType
 import com.example.androiddevchallenge.data.staticTodayWeather
 import com.example.androiddevchallenge.settings.SettingsViewModel
 import com.example.androiddevchallenge.settings.WeatherUnits
@@ -143,6 +146,25 @@ private fun HourlyWeatherMini(
 }
 
 @Composable
+fun WeatherAtTime.weatherTypeIcon(): Painter = when (weatherType) {
+  WeatherType.Sunny -> painterResource(R.drawable.ic_sunny)
+  WeatherType.Cloudy -> painterResource(R.drawable.ic_cloudy)
+  WeatherType.Rainy -> painterResource(R.drawable.ic_rain)
+  WeatherType.Snowy -> painterResource(R.drawable.ic_snow)
+  WeatherType.RainySnowy -> painterResource(R.drawable.ic_snow_rain)
+  WeatherType.Tornado -> painterResource(R.drawable.ic_tornado)
+}
+
+fun WeatherAtTime.weatherTypeDescription(): String = when (weatherType) {
+  WeatherType.Sunny -> "Sunny"
+  WeatherType.Cloudy -> "Cloudy"
+  WeatherType.Rainy -> "Rainy"
+  WeatherType.Snowy -> "Snowy"
+  WeatherType.RainySnowy -> "Mixed rain and snow"
+  WeatherType.Tornado -> "Tornado"
+}
+
+@Composable
 private fun CurrentWeather(
   modifier: Modifier = Modifier,
   weather: WeatherAtTime,
@@ -155,11 +177,11 @@ private fun CurrentWeather(
       modifier = Modifier.padding(16.dp),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      // TODO real icon, description
       Icon(
         modifier = Modifier.size(164.dp),
-        imageVector = Icons.Rounded.Cloud,
-        contentDescription = "Cloudy"
+        painter = weather.weatherTypeIcon(),
+        contentDescription = weather.weatherTypeDescription(),
+        tint = Color.Black // TODO color
       )
 
       Row {

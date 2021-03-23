@@ -5,5 +5,6 @@ data class WeatherAtTime(
   val humidity: Percent,
   val airQuality: AirQualityIndex,
   val precipitation: Precipitation,
-  val wind: Wind
+  val wind: Wind,
+  val weatherType: WeatherType,
 )
