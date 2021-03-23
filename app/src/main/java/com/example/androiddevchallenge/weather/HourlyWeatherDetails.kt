@@ -184,7 +184,6 @@ private fun AirQualityIndex(
     modifier = modifier,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    // TODO color
     Text(text = "${aqi.value} ${aqi.label().displayText}")
     Spacer(Modifier.height(4.dp))
     Text(
