@@ -14,6 +14,8 @@ class HourlyWeatherState(
 ) {
   var activeHour by mutableStateOf(activeHour)
 
+  val activeHourIndex: Int
+    get() = activeHour.value - minHour.value
 
   private var _currentPageOffset = Animatable(0f).apply {
     updateBounds(-1f, 1f)
@@ -40,4 +42,7 @@ class HourlyWeatherState(
     snapToOffset(0f)
 //    selectionState = PagerState.SelectionState.Selected
   }
+
+  override fun toString() = "HourlyWeatherState{activeHour=$activeHour, minHour=$minHour, maxHour=$maxHour " +
+    "activeHourIndex+$activeHourIndex, currentPageOffset=$currentPageOffset}"
 }

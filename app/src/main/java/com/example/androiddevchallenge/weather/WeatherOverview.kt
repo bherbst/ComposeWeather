@@ -1,6 +1,9 @@
 package com.example.androiddevchallenge.weather
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +24,7 @@ import androidx.compose.material.icons.rounded.ArrowDownward
 import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -28,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.SweepGradientShader
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -40,6 +45,7 @@ import com.example.androiddevchallenge.settings.WeatherUnits
 import com.example.androiddevchallenge.ui.theme.WeatherTheme
 import com.example.androiddevchallenge.ui.theme.orange
 import com.example.androiddevchallenge.ui.theme.peach
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
@@ -63,6 +69,8 @@ private fun WeatherOverview(
   weatherForDay: WeatherForDay,
   units: WeatherUnits
 ) {
+  val pageSize = with(LocalDensity.current) { 128.dp.roundToPx() }
+  val coroutineScope = rememberCoroutineScope()
   val hourState = remember {
     HourlyWeatherState(
       // In a real app we would find "now" and make that the active hour, but this will do for now
@@ -84,6 +92,28 @@ private fun WeatherOverview(
     modifier = Modifier
       .fillMaxSize()
       .background(ShaderBrush(backgroundGradient))
+      .draggable(
+        orientation = Orientation.Horizontal,
+        onDragStarted = {
+          // TODO do we need this?
+        },
+        onDragStopped = { velocity ->
+          coroutineScope.launch {
+            hourState.fling(velocity / pageSize)
+          }
+        },
+        state = rememberDraggableState { dy ->
+          coroutineScope.launch {
+            with(hourState) {
+              val pos = pageSize * currentPageOffset
+              val max = if (activeHour == minHour) 0 else pageSize
+              val min = if (activeHour == maxHour) 0 else -pageSize
+              val newPos = (pos + dy).coerceIn(min.toFloat(), max.toFloat())
+              snapToOffset(newPos / pageSize)
+            }
+          }
+        }
+      )
   ) {
     TodayHeader(
       modifier = Modifier
