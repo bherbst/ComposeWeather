@@ -1,6 +1,7 @@
 package com.example.androiddevchallenge.weather
 
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -12,7 +13,7 @@ import com.example.androiddevchallenge.data.WeatherType
 fun WeatherTypeIcon(
   modifier: Modifier = Modifier,
   type: WeatherType,
-  tint: Color
+  tint: Color = LocalContentColor.current
 ) {
   when (type) {
     WeatherType.Sunny -> Icon(

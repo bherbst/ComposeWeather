@@ -2,7 +2,10 @@ package com.example.androiddevchallenge.weather
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
@@ -18,7 +21,6 @@ import com.example.androiddevchallenge.data.WeatherAtTime
 import com.example.androiddevchallenge.data.WeatherForDay
 import com.example.androiddevchallenge.data.staticTodayWeather
 import com.example.androiddevchallenge.settings.WeatherUnits
-import com.example.androiddevchallenge.ui.theme.WeatherTheme
 
 @Composable
 fun HourlyWeatherStrip(
@@ -62,39 +64,28 @@ private fun HourlyWeatherMini(
       style = MaterialTheme.typography.body1,
       fontWeight = weight,
     )
-    Text(
-      text = units.formatTemperature(weather.temp),
-      style = MaterialTheme.typography.caption,
-      fontWeight = weight,
-    )
-    // TODO icon
+    Row(
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      WeatherTypeIcon(
+        type = weather.weatherType
+      )
+      Spacer(Modifier.width(2.dp))
+      Text(
+        text = units.formatTemperature(weather.temp),
+        style = MaterialTheme.typography.caption,
+        fontWeight = weight,
+      )
+    }
   }
 }
 
 @Preview
 @Composable
-private fun ActiveWeatherMiniPreview() {
-  val (hour, weather) = staticTodayWeather.hourlyWeather.entries.first()
-  WeatherTheme {
-    HourlyWeatherMini(
-      hour = hour,
-      weather = weather,
-      units = WeatherUnits.Imperial,
-      isActive = true
-    )
-  }
-}
-
-@Preview
-@Composable
-private fun InactiveWeatherMiniPreview() {
-  val (hour, weather) = staticTodayWeather.hourlyWeather.entries.first()
-  WeatherTheme {
-    HourlyWeatherMini(
-      hour = hour,
-      weather = weather,
-      units = WeatherUnits.Imperial,
-      isActive = false
-    )
-  }
+private fun HourTabsPreview() {
+  HourlyWeatherStrip(
+    dailyWeather = staticTodayWeather,
+    units = WeatherUnits.Imperial,
+    activeHour = HourOfDay(10)
+  )
 }
