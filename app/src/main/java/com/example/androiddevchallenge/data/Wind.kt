@@ -7,13 +7,14 @@ data class Wind(
 
 enum class WindDirection(
   val displayText: String,
+  val shortText: String,
 ) {
-  North("North"),
-  Northeast("Northeast"),
-  East("East"),
-  Southeast("Southeast"),
-  South("South"),
-  Southwest("Southwest"),
-  West("West"),
-  Northwest("Northwest")
+  North("North", "N"),
+  Northeast("Northeast", "NE"),
+  East("East", "E"),
+  Southeast("Southeast", "SE"),
+  South("South", "S"),
+  Southwest("Southwest", "SW"),
+  West("West", "W"),
+  Northwest("Northwest", "NW")
 }

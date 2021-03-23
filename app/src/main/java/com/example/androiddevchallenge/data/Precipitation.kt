@@ -1,16 +1,12 @@
 package com.example.androiddevchallenge.data
 
-sealed class Precipitation {
-  object None: Precipitation()
-  data class Some(
-    val chance: Percent,
-    val type: PrecipitationType,
-    val amount: Inches,
-  ): Precipitation()
-}
+data class Precipitation(
+  val chance: Percent,
+  val type: PrecipitationType,
+  val amount: Inches,
+)
 
 enum class PrecipitationType {
-  None,
   Snow,
   Rain,
   Mixed
