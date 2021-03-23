@@ -104,12 +104,13 @@ private fun WeatherOverview(
       )
     )
 
-    Spacer(Modifier.height(8.dp))
-
     HourlyWeatherStrip(
       dailyWeather = weatherForDay,
       units = units,
-      activeHour = activeHour
+      activeHour = activeHour,
+      onHourClick = { hour ->
+        pagerState.currentPage = weatherForDay.hourlyWeatherList.indexOfFirst { it.key == hour }
+      }
     )
 
     Pager(

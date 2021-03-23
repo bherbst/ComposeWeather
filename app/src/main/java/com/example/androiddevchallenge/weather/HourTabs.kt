@@ -1,5 +1,6 @@
 package com.example.androiddevchallenge.weather
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,9 +14,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,16 +27,17 @@ import com.example.androiddevchallenge.data.staticTodayWeather
 import com.example.androiddevchallenge.extensions.fullyVisibleItemRange
 import com.example.androiddevchallenge.settings.WeatherUnits
 
+/**
+ * Tab strip that shows a mini hourly weather preview
+ */
 @Composable
 fun HourlyWeatherStrip(
   dailyWeather: WeatherForDay,
   units: WeatherUnits,
   activeHour: HourOfDay,
+  onHourClick: (hour: HourOfDay) -> Unit,
 ) {
-  val scope = rememberCoroutineScope()
   val listState = rememberLazyListState()
-  // TODO scroll appropriately
-//  scope.launch { listState.scrollToItem(hourlyWeatherState.activeHourIndex) }
   LaunchedEffect(activeHour) {
     val index = dailyWeather.hourlyWeatherList.indexOfFirst { it.key == activeHour }
     if (index !in listState.layoutInfo.fullyVisibleItemRange) {
@@ -49,11 +51,12 @@ fun HourlyWeatherStrip(
   ) {
     items(dailyWeather.hourlyWeatherList) { (hour, weather) ->
       HourlyWeatherMini(
-        modifier = Modifier.padding(horizontal = 16.dp),
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         hour = hour,
         weather = weather,
         units = units,
-        isActive = hour == activeHour
+        isActive = hour == activeHour,
+        onClick = { onHourClick(hour) }
       )
     }
   }
@@ -69,10 +72,14 @@ private fun HourlyWeatherMini(
   weather: WeatherAtTime,
   units: WeatherUnits,
   isActive: Boolean,
+  onClick: () -> Unit,
 ) {
   val weight = if (isActive) FontWeight.Bold else FontWeight.Normal
   Column(
-    modifier = modifier,
+    modifier = Modifier.clickable(
+        role = Role.Tab,
+        onClick = onClick
+      ).then(modifier),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     Text(
@@ -102,6 +109,7 @@ private fun HourTabsPreview() {
   HourlyWeatherStrip(
     dailyWeather = staticTodayWeather,
     units = WeatherUnits.Imperial,
-    activeHour = HourOfDay(11)
+    activeHour = HourOfDay(11),
+    onHourClick = {}
   )
 }
