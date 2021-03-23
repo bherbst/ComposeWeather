@@ -1,6 +1,7 @@
 package com.example.androiddevchallenge.weather
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,9 +12,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowDownward
+import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,9 +30,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.SweepGradientShader
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.androiddevchallenge.data.DegreesFahrenheit
 import com.example.androiddevchallenge.data.WeatherAtTime
 import com.example.androiddevchallenge.data.WeatherForDay
 import com.example.androiddevchallenge.data.staticTodayWeather
@@ -36,6 +43,7 @@ import com.example.androiddevchallenge.settings.WeatherUnits
 import com.example.androiddevchallenge.ui.theme.WeatherTheme
 import com.example.androiddevchallenge.ui.theme.orange
 import com.example.androiddevchallenge.ui.theme.peach
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
@@ -74,29 +82,19 @@ private fun WeatherOverview(
   )
 
   Column(
-    modifier = Modifier.fillMaxSize()
+    modifier = Modifier
+      .fillMaxSize()
       .background(ShaderBrush(backgroundGradient))
   ) {
-    Row(
+    TodayHeader(
       modifier = Modifier
         .padding(16.dp)
-        .fillMaxWidth()
-    ) {
-      Column {
-        Text(
-          text = weatherForDay.day.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()),
-          style = MaterialTheme.typography.h4
-        )
-        Spacer(Modifier.height(2.dp))
-        Text(
-          text = weatherForDay.day.format(dateFormat),
-          style = MaterialTheme.typography.h5
-        )
-      }
-
-      // TODO high
-      // TODO low
-    }
+        .fillMaxWidth(),
+      date = weatherForDay.day,
+      highTemp = weatherForDay.highTemp,
+      lowTemp = weatherForDay.lowTemp,
+      units = units
+    )
 
     Divider(
       modifier = Modifier.padding(
@@ -104,6 +102,8 @@ private fun WeatherOverview(
         horizontal = 8.dp
       )
     )
+
+    Spacer(Modifier.height(8.dp))
 
     HourlyWeatherStrip(
       dailyWeather = weatherForDay,
@@ -115,6 +115,70 @@ private fun WeatherOverview(
       modifier = Modifier.fillMaxWidth(),
       weather = weatherForDay.hourlyWeather[activeHour]!!,
       units = units
+    )
+  }
+}
+
+@Composable
+private fun TodayHeader(
+  modifier: Modifier = Modifier,
+  date: LocalDate,
+  highTemp: DegreesFahrenheit,
+  lowTemp: DegreesFahrenheit,
+  units: WeatherUnits,
+) {
+  Row(
+    modifier = modifier,
+    horizontalArrangement = Arrangement.SpaceBetween,
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    Column {
+      Text(
+        text = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()),
+        style = MaterialTheme.typography.h4
+      )
+      Spacer(Modifier.height(2.dp))
+      Text(
+        text = date.format(dateFormat),
+        style = MaterialTheme.typography.h5
+      )
+    }
+
+    Column {
+      HighLowTemp(
+        icon = Icons.Rounded.ArrowUpward,
+        description = "High temperature",
+        tempText = units.formatTemperature(highTemp)
+      )
+      Spacer(Modifier.height(8.dp))
+      HighLowTemp(
+        icon = Icons.Rounded.ArrowDownward,
+        description = "Low temperature",
+        tempText = units.formatTemperature(lowTemp)
+      )
+    }
+  }
+}
+
+@Composable
+private fun HighLowTemp(
+  modifier: Modifier = Modifier,
+  icon: ImageVector,
+  description: String,
+  tempText: String,
+) {
+  Row(
+    modifier = modifier,
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    Icon(
+      modifier = Modifier.size(18.dp),
+      imageVector = icon,
+      contentDescription = description
+    )
+    Text(
+      text = tempText,
+      style = MaterialTheme.typography.body2
     )
   }
 }
