@@ -15,4 +15,15 @@ inline class HourOfDay(
     }
     return "$hour$periodText"
   }
+
+  operator fun minus(hours: Int): HourOfDay {
+    var result = this.value - hours
+
+    // TODO extract clamping
+    return when {
+      result < 0 -> HourOfDay(result + 24)
+      result > 23 -> HourOfDay(result - 24)
+      else -> HourOfDay(result)
+    }
+  }
 }

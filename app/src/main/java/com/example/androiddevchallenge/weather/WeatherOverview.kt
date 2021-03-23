@@ -20,10 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDownward
 import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -66,10 +63,12 @@ private fun WeatherOverview(
   weatherForDay: WeatherForDay,
   units: WeatherUnits
 ) {
-  var activeHour by remember {
-    mutableStateOf(
-      // In a real app we would find "now", but this will do for now
-      weatherForDay.hourlyWeather.keys.first()
+  val hourState = remember {
+    HourlyWeatherState(
+      // In a real app we would find "now" and make that the active hour, but this will do for now
+      activeHour = weatherForDay.hourlyWeather.keys.first(),
+      minHour = weatherForDay.hourlyWeather.keys.first(),
+      maxHour = weatherForDay.hourlyWeather.keys.last()
     )
   }
 
@@ -108,12 +107,12 @@ private fun WeatherOverview(
     HourlyWeatherStrip(
       dailyWeather = weatherForDay,
       units = units,
-      activeHour = activeHour
+      hourlyWeatherState = hourState
     )
 
     CurrentWeather(
       modifier = Modifier.fillMaxWidth(),
-      weather = weatherForDay.hourlyWeather[activeHour]!!,
+      weather = weatherForDay.hourlyWeather[hourState.activeHour]!!,
       units = units
     )
   }

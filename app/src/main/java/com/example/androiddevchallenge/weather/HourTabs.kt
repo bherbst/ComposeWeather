@@ -26,7 +26,7 @@ import com.example.androiddevchallenge.settings.WeatherUnits
 fun HourlyWeatherStrip(
   dailyWeather: WeatherForDay,
   units: WeatherUnits,
-  activeHour: HourOfDay,
+  hourlyWeatherState: HourlyWeatherState,
 ) {
   LazyRow(
     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
@@ -37,7 +37,7 @@ fun HourlyWeatherStrip(
         hour = hour,
         weather = weather,
         units = units,
-        isActive = hour == activeHour
+        isActive = hour == hourlyWeatherState.activeHour
       )
     }
   }
@@ -86,6 +86,10 @@ private fun HourTabsPreview() {
   HourlyWeatherStrip(
     dailyWeather = staticTodayWeather,
     units = WeatherUnits.Imperial,
-    activeHour = HourOfDay(10)
+    hourlyWeatherState = HourlyWeatherState(
+      activeHour = HourOfDay(11),
+      minHour = HourOfDay(10),
+      maxHour = HourOfDay(16)
+    )
   )
 }
