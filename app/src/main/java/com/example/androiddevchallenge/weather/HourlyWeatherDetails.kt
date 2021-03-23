@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -184,9 +185,12 @@ private fun AirQualityIndex(
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     // TODO color
-    Text(text = "${aqi.value} AQI")
+    Text(text = "${aqi.value} ${aqi.label().displayText}")
     Spacer(Modifier.height(4.dp))
-    Text(text = aqi.label().displayText)
+    Text(
+      text = "Air Quality",
+      style = MaterialTheme.typography.caption
+    )
   }
 }
 
@@ -201,7 +205,10 @@ private fun Humidity(
   ) {
     Text("${humidity.value}%")
     Spacer(Modifier.height(4.dp))
-    Text("Humidity")
+    Text(
+      text = "Humidity",
+      style = MaterialTheme.typography.caption
+    )
   }
 }
 

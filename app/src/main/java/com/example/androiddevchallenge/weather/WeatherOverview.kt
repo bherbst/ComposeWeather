@@ -26,10 +26,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.SweepGradientShader
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -208,11 +208,26 @@ private fun CurrentWeather(
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       Spacer(Modifier.height(48.dp))
-      WeatherTypeIcon(
-        modifier = Modifier.size(164.dp),
-        type = weather.weatherType,
-        tint = Color.Black // TODO color
-      )
+      Row(
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        WeatherTypeIcon(
+          modifier = Modifier.size(164.dp),
+          type = weather.weatherType
+        )
+        Row {
+          Text(
+            text = units.convertTemperature(weather.temp).toString(),
+            style = MaterialTheme.typography.h2,
+            fontWeight = FontWeight.ExtraBold
+          )
+          Text(
+            modifier = Modifier.padding(top = 16.dp), // Hack until includeFontPadding exists
+            text = units.degreesLabel,
+            style = MaterialTheme.typography.h5
+          )
+        }
+      }
       Spacer(Modifier.height(48.dp))
 
       HourlyWeatherDetails(

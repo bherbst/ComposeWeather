@@ -34,11 +34,13 @@ enum class WeatherUnits(
     speedLabel = "km/h",
   );
 
+  fun convertTemperature(temp: DegreesFahrenheit) = when (this) {
+    Imperial -> temp.value
+    Metric -> temp.toCelsius().value
+  }
+
   fun formatTemperature(temp: DegreesFahrenheit): String {
-    val converted =  when (this) {
-      Imperial -> temp.value
-      Metric -> temp.toCelsius().value
-    }
+    val converted =  convertTemperature(temp)
     return "$converted$degreesLabel"
   }
 
