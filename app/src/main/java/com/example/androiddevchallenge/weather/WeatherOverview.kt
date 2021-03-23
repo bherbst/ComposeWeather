@@ -1,9 +1,11 @@
 package com.example.androiddevchallenge.weather
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,7 +21,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.SweepGradientShader
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -29,6 +34,8 @@ import com.example.androiddevchallenge.data.staticTodayWeather
 import com.example.androiddevchallenge.settings.SettingsViewModel
 import com.example.androiddevchallenge.settings.WeatherUnits
 import com.example.androiddevchallenge.ui.theme.WeatherTheme
+import com.example.androiddevchallenge.ui.theme.orange
+import com.example.androiddevchallenge.ui.theme.peach
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
@@ -58,10 +65,17 @@ private fun WeatherOverview(
     )
   }
 
-  // TODO background gradient
+  val backgroundGradient = SweepGradientShader(
+    center = Offset(0f, 0f),
+    colors = listOf(
+      peach,
+      orange
+    )
+  )
 
   Column(
-    modifier = Modifier.fillMaxWidth()
+    modifier = Modifier.fillMaxSize()
+      .background(ShaderBrush(backgroundGradient))
   ) {
     Row(
       modifier = Modifier

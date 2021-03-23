@@ -67,8 +67,6 @@ fun HourlyWeatherDetails(
       )
     }
 
-    Spacer(Modifier.height(8.dp))
-
     Row(
       horizontalArrangement = Arrangement.SpaceBetween,
       verticalAlignment = Alignment.CenterVertically
