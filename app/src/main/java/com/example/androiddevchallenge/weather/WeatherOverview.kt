@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.SweepGradientShader
@@ -36,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androiddevchallenge.data.DegreesFahrenheit
+import com.example.androiddevchallenge.data.HourOfDay
 import com.example.androiddevchallenge.data.WeatherAtTime
 import com.example.androiddevchallenge.data.WeatherForDay
 import com.example.androiddevchallenge.data.staticTodayWeather
@@ -44,10 +46,14 @@ import com.example.androiddevchallenge.settings.WeatherUnits
 import com.example.androiddevchallenge.ui.Pager
 import com.example.androiddevchallenge.ui.PagerState
 import com.example.androiddevchallenge.ui.theme.WeatherTheme
+import com.example.androiddevchallenge.ui.theme.yellowBold
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 
 private val dateFormat = DateTimeFormatter.ofPattern("MMMM d, yyyy")
 
@@ -83,7 +89,6 @@ private fun WeatherOverview(
     animationSpec = spring()
   )
 
-//  val backgroundGradientState = remember { WeatherGradientState(peach, orange) }
   val backgroundGradient = SweepGradientShader(
     center = Offset(0f, 0f),
     colors = listOf(
@@ -96,6 +101,10 @@ private fun WeatherOverview(
     modifier = Modifier
       .fillMaxSize()
       .background(ShaderBrush(backgroundGradient))
+      .drawSunAtPosition(
+        hour = activeHour,
+        hourOffset = pagerState.currentPageOffset
+      )
   ) {
     TodayHeader(
       modifier = Modifier
@@ -134,6 +143,29 @@ private fun WeatherOverview(
       )
     }
   }
+}
+
+/**
+ * Draw a sun along an arc in the background of this view
+ */
+fun Modifier.drawSunAtPosition(
+  hour: HourOfDay,
+  hourOffset: Float
+) = drawBehind {
+  val sunPathRadius = .4f * size.width
+  // The sun starts at π and ends at 0, 6am to 6pm
+  // We don't have to handle times outside that because they don't exist in our
+  // insulated world
+  val theta = PI - (PI * ((hour.value - hourOffset - 6) / 12f))
+  val sunX = center.x + sunPathRadius * cos(theta)
+  val sunY = center.y - sunPathRadius * sin(theta)
+
+  drawCircle(
+    color = yellowBold,
+    alpha = .3f,
+    radius = 32.dp.roundToPx().toFloat(),
+    center = Offset(sunX.toFloat(), sunY.toFloat())
+  )
 }
 
 @Composable
@@ -209,8 +241,6 @@ private fun CurrentWeather(
   Box(
     modifier = modifier
   ) {
-    // TODO Sun location
-
     Column(
       modifier = Modifier
         .padding(16.dp)
