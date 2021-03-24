@@ -16,9 +16,9 @@ val staticTodayWeather = WeatherForDay(
         direction = WindDirection.Northeast
       ),
       precipitation = Precipitation(
-        chance = Percent(0),
+        chance = Percent(10),
         type = PrecipitationType.Rain,
-        amount = Inches(0.0)
+        amount = Inches(0.1)
       ),
       weatherType = WeatherType.Sunny
     ),
@@ -117,6 +117,38 @@ val staticTodayWeather = WeatherForDay(
         amount = Inches(0.0)
       ),
       weatherType = WeatherType.Sunny
+    ),
+
+    HourOfDay(17) to WeatherAtTime(
+      temp = DegreesFahrenheit(43),
+      humidity = Percent(81),
+      airQuality = AirQualityIndex(80),
+      wind = Wind(
+        speed = MilesPerHour(5),
+        direction = WindDirection.Northeast
+      ),
+      precipitation = Precipitation(
+        chance = Percent(87),
+        type = PrecipitationType.Snow,
+        amount = Inches(3.0)
+      ),
+      weatherType = WeatherType.Snowy
+    ),
+
+    HourOfDay(18) to WeatherAtTime(
+      temp = DegreesFahrenheit(43),
+      humidity = Percent(81),
+      airQuality = AirQualityIndex(80),
+      wind = Wind(
+        speed = MilesPerHour(4),
+        direction = WindDirection.North
+      ),
+      precipitation = Precipitation(
+        chance = Percent(61),
+        type = PrecipitationType.Rain,
+        amount = Inches(2.0)
+      ),
+      weatherType = WeatherType.Cloudy
     )
   )
 )

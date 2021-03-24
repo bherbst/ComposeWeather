@@ -1,5 +1,7 @@
 package com.example.androiddevchallenge.weather
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,8 +44,6 @@ import com.example.androiddevchallenge.settings.WeatherUnits
 import com.example.androiddevchallenge.ui.Pager
 import com.example.androiddevchallenge.ui.PagerState
 import com.example.androiddevchallenge.ui.theme.WeatherTheme
-import com.example.androiddevchallenge.ui.theme.orange
-import com.example.androiddevchallenge.ui.theme.peach
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
@@ -74,11 +74,21 @@ private fun WeatherOverview(
     weatherForDay.hourlyWeatherList[pagerState.currentPage].key
   }
 
+  val gradientStart by animateColorAsState(
+    targetValue = WeatherGradientCalculator.gradientStartForHour(activeHour),
+    animationSpec = spring()
+  )
+  val gradientEnd by animateColorAsState(
+    targetValue = WeatherGradientCalculator.gradientEndForHour(activeHour),
+    animationSpec = spring()
+  )
+
+//  val backgroundGradientState = remember { WeatherGradientState(peach, orange) }
   val backgroundGradient = SweepGradientShader(
     center = Offset(0f, 0f),
     colors = listOf(
-      peach,
-      orange
+      gradientStart,
+      gradientEnd
     )
   )
 
