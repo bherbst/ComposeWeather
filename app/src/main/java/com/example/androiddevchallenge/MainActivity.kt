@@ -45,11 +45,3 @@ fun LightPreview() {
         WeatherApp()
     }
 }
-
-@Preview("Dark Theme", widthDp = 360, heightDp = 640)
-@Composable
-fun DarkPreview() {
-    WeatherTheme(darkTheme = true) {
-        WeatherApp()
-    }
-}
