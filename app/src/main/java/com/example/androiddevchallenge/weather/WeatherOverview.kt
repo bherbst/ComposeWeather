@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.example.androiddevchallenge.weather
 
 import androidx.compose.animation.animateColorAsState
@@ -59,235 +74,235 @@ private val dateFormat = DateTimeFormatter.ofPattern("MMMM d, yyyy")
 
 @Composable
 fun WeatherOverview() {
-  val weatherViewModel: WeatherViewModel = viewModel()
-  val settingsViewModel: SettingsViewModel = viewModel()
+    val weatherViewModel: WeatherViewModel = viewModel()
+    val settingsViewModel: SettingsViewModel = viewModel()
 
-  WeatherOverview(
-    weatherViewModel.todaysWeather,
-    settingsViewModel.units
-  )
+    WeatherOverview(
+        weatherViewModel.todaysWeather,
+        settingsViewModel.units
+    )
 }
 
 @Composable
 private fun WeatherOverview(
-  weatherForDay: WeatherForDay,
-  units: WeatherUnits
+    weatherForDay: WeatherForDay,
+    units: WeatherUnits
 ) {
-  val pagerState = remember {
-    PagerState(maxPage = weatherForDay.hourlyWeather.size - 1)
-  }
-  val activeHour by derivedStateOf {
-    weatherForDay.hourlyWeatherList[pagerState.currentPage].key
-  }
-
-  val gradientStart by animateColorAsState(
-    targetValue = WeatherGradientCalculator.gradientStartForHour(activeHour),
-    animationSpec = spring()
-  )
-  val gradientEnd by animateColorAsState(
-    targetValue = WeatherGradientCalculator.gradientEndForHour(activeHour),
-    animationSpec = spring()
-  )
-
-  val backgroundGradient = SweepGradientShader(
-    center = Offset(0f, 0f),
-    colors = listOf(
-      gradientStart,
-      gradientEnd
-    )
-  )
-
-  Column(
-    modifier = Modifier
-      .fillMaxSize()
-      .background(ShaderBrush(backgroundGradient))
-      .drawSunAtPosition(
-        hour = activeHour,
-        hourOffset = pagerState.currentPageOffset
-      )
-  ) {
-    TodayHeader(
-      modifier = Modifier
-        .padding(16.dp)
-        .fillMaxWidth(),
-      date = weatherForDay.day,
-      highTemp = weatherForDay.highTemp,
-      lowTemp = weatherForDay.lowTemp,
-      units = units
-    )
-
-    Divider(
-      modifier = Modifier.padding(
-        vertical = 8.dp,
-        horizontal = 8.dp
-      )
-    )
-
-    HourlyWeatherStrip(
-      dailyWeather = weatherForDay,
-      units = units,
-      activeHour = activeHour,
-      onHourClick = { hour ->
-        pagerState.currentPage = weatherForDay.hourlyWeatherList.indexOfFirst { it.key == hour }
-      }
-    )
-
-    Pager(
-      state = pagerState
-    ) {
-      val weather = weatherForDay.hourlyWeatherList[page].value
-      CurrentWeather(
-        modifier = Modifier.fillMaxWidth(),
-        weather = weather,
-        units = units
-      )
+    val pagerState = remember {
+        PagerState(maxPage = weatherForDay.hourlyWeather.size - 1)
     }
-  }
+    val activeHour by derivedStateOf {
+        weatherForDay.hourlyWeatherList[pagerState.currentPage].key
+    }
+
+    val gradientStart by animateColorAsState(
+        targetValue = WeatherGradientCalculator.gradientStartForHour(activeHour),
+        animationSpec = spring()
+    )
+    val gradientEnd by animateColorAsState(
+        targetValue = WeatherGradientCalculator.gradientEndForHour(activeHour),
+        animationSpec = spring()
+    )
+
+    val backgroundGradient = SweepGradientShader(
+        center = Offset(0f, 0f),
+        colors = listOf(
+            gradientStart,
+            gradientEnd
+        )
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(ShaderBrush(backgroundGradient))
+            .drawSunAtPosition(
+                hour = activeHour,
+                hourOffset = pagerState.currentPageOffset
+            )
+    ) {
+        TodayHeader(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            date = weatherForDay.day,
+            highTemp = weatherForDay.highTemp,
+            lowTemp = weatherForDay.lowTemp,
+            units = units
+        )
+
+        Divider(
+            modifier = Modifier.padding(
+                vertical = 8.dp,
+                horizontal = 8.dp
+            )
+        )
+
+        HourlyWeatherStrip(
+            dailyWeather = weatherForDay,
+            units = units,
+            activeHour = activeHour,
+            onHourClick = { hour ->
+                pagerState.currentPage = weatherForDay.hourlyWeatherList.indexOfFirst { it.key == hour }
+            }
+        )
+
+        Pager(
+            state = pagerState
+        ) {
+            val weather = weatherForDay.hourlyWeatherList[page].value
+            CurrentWeather(
+                modifier = Modifier.fillMaxWidth(),
+                weather = weather,
+                units = units
+            )
+        }
+    }
 }
 
 /**
  * Draw a sun along an arc in the background of this view
  */
 fun Modifier.drawSunAtPosition(
-  hour: HourOfDay,
-  hourOffset: Float
+    hour: HourOfDay,
+    hourOffset: Float
 ) = drawBehind {
-  val sunPathRadius = .4f * size.width
-  // The sun starts at π and ends at 0, 6am to 6pm
-  // We don't have to handle times outside that because they don't exist in our
-  // insulated world
-  val theta = PI - (PI * ((hour.value - hourOffset - 6) / 12f))
-  val sunX = center.x + sunPathRadius * cos(theta)
-  val sunY = center.y - sunPathRadius * sin(theta)
+    val sunPathRadius = .4f * size.width
+    // The sun starts at π and ends at 0, 6am to 6pm
+    // We don't have to handle times outside that because they don't exist in our
+    // insulated world
+    val theta = PI - (PI * ((hour.value - hourOffset - 6) / 12f))
+    val sunX = center.x + sunPathRadius * cos(theta)
+    val sunY = center.y - sunPathRadius * sin(theta)
 
-  drawCircle(
-    color = yellowBold,
-    alpha = .3f,
-    radius = 32.dp.roundToPx().toFloat(),
-    center = Offset(sunX.toFloat(), sunY.toFloat())
-  )
+    drawCircle(
+        color = yellowBold,
+        alpha = .3f,
+        radius = 32.dp.roundToPx().toFloat(),
+        center = Offset(sunX.toFloat(), sunY.toFloat())
+    )
 }
 
 @Composable
 private fun TodayHeader(
-  modifier: Modifier = Modifier,
-  date: LocalDate,
-  highTemp: DegreesFahrenheit,
-  lowTemp: DegreesFahrenheit,
-  units: WeatherUnits,
+    modifier: Modifier = Modifier,
+    date: LocalDate,
+    highTemp: DegreesFahrenheit,
+    lowTemp: DegreesFahrenheit,
+    units: WeatherUnits,
 ) {
-  Row(
-    modifier = modifier,
-    horizontalArrangement = Arrangement.SpaceBetween,
-    verticalAlignment = Alignment.CenterVertically
-  ) {
-    Column {
-      Text(
-        text = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()),
-        style = MaterialTheme.typography.h4
-      )
-      Spacer(Modifier.height(2.dp))
-      Text(
-        text = date.format(dateFormat),
-        style = MaterialTheme.typography.h5
-      )
-    }
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
+            Text(
+                text = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()),
+                style = MaterialTheme.typography.h4
+            )
+            Spacer(Modifier.height(2.dp))
+            Text(
+                text = date.format(dateFormat),
+                style = MaterialTheme.typography.h5
+            )
+        }
 
-    Column {
-      HighLowTemp(
-        icon = Icons.Rounded.ArrowUpward,
-        description = "High temperature",
-        tempText = units.formatTemperature(highTemp)
-      )
-      Spacer(Modifier.height(8.dp))
-      HighLowTemp(
-        icon = Icons.Rounded.ArrowDownward,
-        description = "Low temperature",
-        tempText = units.formatTemperature(lowTemp)
-      )
+        Column {
+            HighLowTemp(
+                icon = Icons.Rounded.ArrowUpward,
+                description = "High temperature",
+                tempText = units.formatTemperature(highTemp)
+            )
+            Spacer(Modifier.height(8.dp))
+            HighLowTemp(
+                icon = Icons.Rounded.ArrowDownward,
+                description = "Low temperature",
+                tempText = units.formatTemperature(lowTemp)
+            )
+        }
     }
-  }
 }
 
 @Composable
 private fun HighLowTemp(
-  modifier: Modifier = Modifier,
-  icon: ImageVector,
-  description: String,
-  tempText: String,
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    description: String,
+    tempText: String,
 ) {
-  Row(
-    modifier = modifier,
-    verticalAlignment = Alignment.CenterVertically
-  ) {
-    Icon(
-      modifier = Modifier.size(18.dp),
-      imageVector = icon,
-      contentDescription = description
-    )
-    Text(
-      text = tempText,
-      style = MaterialTheme.typography.body2
-    )
-  }
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            modifier = Modifier.size(18.dp),
+            imageVector = icon,
+            contentDescription = description
+        )
+        Text(
+            text = tempText,
+            style = MaterialTheme.typography.body2
+        )
+    }
 }
 
 @Composable
 private fun CurrentWeather(
-  modifier: Modifier = Modifier,
-  weather: WeatherAtTime,
-  units: WeatherUnits,
+    modifier: Modifier = Modifier,
+    weather: WeatherAtTime,
+    units: WeatherUnits,
 ) {
-  Box(
-    modifier = modifier
-  ) {
-    Column(
-      modifier = Modifier
-        .padding(16.dp)
-        .fillMaxWidth(),
-      horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = modifier
     ) {
-      Spacer(Modifier.height(48.dp))
-      Row(
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-        WeatherTypeIcon(
-          modifier = Modifier.size(164.dp),
-          type = weather.weatherType
-        )
-        Row {
-          Text(
-            text = units.convertTemperature(weather.temp).toString(),
-            style = MaterialTheme.typography.h2,
-            fontWeight = FontWeight.ExtraBold
-          )
-          Text(
-            modifier = Modifier.padding(top = 16.dp), // Hack until includeFontPadding exists
-            text = units.degreesLabel,
-            style = MaterialTheme.typography.h5
-          )
-        }
-      }
-      Spacer(Modifier.height(48.dp))
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(Modifier.height(48.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                WeatherTypeIcon(
+                    modifier = Modifier.size(164.dp),
+                    type = weather.weatherType
+                )
+                Row {
+                    Text(
+                        text = units.convertTemperature(weather.temp).toString(),
+                        style = MaterialTheme.typography.h2,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Text(
+                        modifier = Modifier.padding(top = 16.dp), // Hack until includeFontPadding exists
+                        text = units.degreesLabel,
+                        style = MaterialTheme.typography.h5
+                    )
+                }
+            }
+            Spacer(Modifier.height(48.dp))
 
-      HourlyWeatherDetails(
-        modifier = Modifier.fillMaxWidth(.75f),
-        weather = weather,
-        units = units
-      )
+            HourlyWeatherDetails(
+                modifier = Modifier.fillMaxWidth(.75f),
+                weather = weather,
+                units = units
+            )
+        }
     }
-  }
 }
 
 @Preview
 @Composable
 private fun WeatherOverviewPreview() {
-  WeatherTheme {
-    Surface {
-      WeatherOverview(
-        staticTodayWeather,
-        WeatherUnits.Imperial
-      )
+    WeatherTheme {
+        Surface {
+            WeatherOverview(
+                staticTodayWeather,
+                WeatherUnits.Imperial
+            )
+        }
     }
-  }
 }

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.example.androiddevchallenge.weather
 
 import androidx.compose.foundation.layout.Arrangement
@@ -39,125 +54,125 @@ import com.example.androiddevchallenge.ui.theme.WeatherTheme
 
 @Composable
 fun HourlyWeatherDetails(
-  modifier: Modifier = Modifier,
-  weather: WeatherAtTime,
-  units: WeatherUnits
+    modifier: Modifier = Modifier,
+    weather: WeatherAtTime,
+    units: WeatherUnits
 ) {
-  Column(
-    modifier = modifier,
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    Row(
-      horizontalArrangement = Arrangement.SpaceBetween,
-      verticalAlignment = Alignment.CenterVertically
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      Precipitation(
-        modifier = Modifier.fillMaxWidth(.5f)
-          .padding(16.dp),
-        precipitation = weather.precipitation,
-        units = units
-      )
-      VerticalDivider(
-        modifier = Modifier.height(64.dp)
-      )
-      Wind(
-        modifier = Modifier.fillMaxWidth()
-          .padding(16.dp),
-        wind = weather.wind,
-        units = units
-      )
-    }
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Precipitation(
+                modifier = Modifier.fillMaxWidth(.5f)
+                    .padding(16.dp),
+                precipitation = weather.precipitation,
+                units = units
+            )
+            VerticalDivider(
+                modifier = Modifier.height(64.dp)
+            )
+            Wind(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(16.dp),
+                wind = weather.wind,
+                units = units
+            )
+        }
 
-    Row(
-      horizontalArrangement = Arrangement.SpaceBetween,
-      verticalAlignment = Alignment.CenterVertically
-    ){
-      Humidity(
-        modifier = Modifier.fillMaxWidth(.5f)
-          .padding(16.dp),
-        humidity = weather.humidity
-      )
-      VerticalDivider(
-        modifier = Modifier.height(64.dp)
-      )
-      AirQualityIndex(
-        modifier = Modifier.fillMaxWidth()
-          .padding(16.dp),
-        aqi = weather.airQuality
-      )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Humidity(
+                modifier = Modifier.fillMaxWidth(.5f)
+                    .padding(16.dp),
+                humidity = weather.humidity
+            )
+            VerticalDivider(
+                modifier = Modifier.height(64.dp)
+            )
+            AirQualityIndex(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(16.dp),
+                aqi = weather.airQuality
+            )
+        }
     }
-  }
 }
 
 @Composable
 private fun Precipitation(
-  modifier: Modifier = Modifier,
-  precipitation: Precipitation,
-  units: WeatherUnits
+    modifier: Modifier = Modifier,
+    precipitation: Precipitation,
+    units: WeatherUnits
 ) {
-  Column(
-    modifier = modifier,
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    Row {
-      PrecipitationIcon(precipitation.type)
-      Spacer(Modifier.width(4.dp))
-      Text(
-        text = "${precipitation.chance.value}%"
-      )
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row {
+            PrecipitationIcon(precipitation.type)
+            Spacer(Modifier.width(4.dp))
+            Text(
+                text = "${precipitation.chance.value}%"
+            )
+        }
+        Spacer(Modifier.height(4.dp))
+        Text(units.formatAccumulation(precipitation.amount))
     }
-    Spacer(Modifier.height(4.dp))
-    Text(units.formatAccumulation(precipitation.amount))
-  }
 }
 
 @Composable
 private fun PrecipitationIcon(type: PrecipitationType) {
-  when (type) {
-    PrecipitationType.Snow -> Icon(
-      painter = painterResource(R.drawable.ic_snowflake),
-      contentDescription = "snow"
-    )
-    PrecipitationType.Mixed -> Icon(
-      painter = painterResource(R.drawable.ic_snowflake_raindrop),
-      contentDescription = "rain and snow"
-    )
-    else -> Icon(
-      painter = painterResource(R.drawable.ic_raindrop),
-      contentDescription = "rain"
-    )
-  }
+    when (type) {
+        PrecipitationType.Snow -> Icon(
+            painter = painterResource(R.drawable.ic_snowflake),
+            contentDescription = "snow"
+        )
+        PrecipitationType.Mixed -> Icon(
+            painter = painterResource(R.drawable.ic_snowflake_raindrop),
+            contentDescription = "rain and snow"
+        )
+        else -> Icon(
+            painter = painterResource(R.drawable.ic_raindrop),
+            contentDescription = "rain"
+        )
+    }
 }
 
 @Composable
 private fun Wind(
-  modifier: Modifier = Modifier,
-  wind: Wind,
-  units: WeatherUnits
+    modifier: Modifier = Modifier,
+    wind: Wind,
+    units: WeatherUnits
 ) {
-  Column(
-    modifier = modifier,
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    Row {
-      Icon(
-        painter = painterResource(R.drawable.ic_wind),
-        contentDescription = "Wind"
-      )
-      Spacer(Modifier.width(4.dp))
-      Text(units.formatSpeed(wind.speed))
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row {
+            Icon(
+                painter = painterResource(R.drawable.ic_wind),
+                contentDescription = "Wind"
+            )
+            Spacer(Modifier.width(4.dp))
+            Text(units.formatSpeed(wind.speed))
+        }
+        Spacer(Modifier.height(4.dp))
+        Row {
+            Icon(
+                modifier = Modifier.rotate(wind.iconRotationDegrees()),
+                imageVector = Icons.Rounded.Navigation,
+                contentDescription = null // The text label will suffice
+            )
+            Spacer(Modifier.width(4.dp))
+            Text(wind.direction.shortText)
+        }
     }
-    Spacer(Modifier.height(4.dp))
-    Row {
-      Icon(
-        modifier = Modifier.rotate(wind.iconRotationDegrees()),
-        imageVector = Icons.Rounded.Navigation,
-        contentDescription = null // The text label will suffice
-      )
-      Spacer(Modifier.width(4.dp))
-      Text(wind.direction.shortText)
-    }
-  }
 }
 
 /**
@@ -165,77 +180,77 @@ private fun Wind(
  * which is pointing directly upward at zero rotation.
  */
 private fun Wind.iconRotationDegrees(): Float = when (direction) {
-  WindDirection.North -> 0f
-  WindDirection.Northeast -> 45f
-  WindDirection.East -> 90f
-  WindDirection.Southeast -> 135f
-  WindDirection.South -> 180f
-  WindDirection.Southwest -> 225f
-  WindDirection.West -> 270f
-  WindDirection.Northwest -> 315f
+    WindDirection.North -> 0f
+    WindDirection.Northeast -> 45f
+    WindDirection.East -> 90f
+    WindDirection.Southeast -> 135f
+    WindDirection.South -> 180f
+    WindDirection.Southwest -> 225f
+    WindDirection.West -> 270f
+    WindDirection.Northwest -> 315f
 }
 
 @Composable
 private fun AirQualityIndex(
-  modifier: Modifier = Modifier,
-  aqi: AirQualityIndex
+    modifier: Modifier = Modifier,
+    aqi: AirQualityIndex
 ) {
-  Column(
-    modifier = modifier,
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    Text(text = "${aqi.value} ${aqi.label().displayText}")
-    Spacer(Modifier.height(4.dp))
-    Text(
-      text = "Air Quality",
-      style = MaterialTheme.typography.caption
-    )
-  }
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "${aqi.value} ${aqi.label().displayText}")
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = "Air Quality",
+            style = MaterialTheme.typography.caption
+        )
+    }
 }
 
 @Composable
 private fun Humidity(
-  modifier: Modifier = Modifier,
-  humidity: Percent
+    modifier: Modifier = Modifier,
+    humidity: Percent
 ) {
-  Column(
-    modifier = modifier,
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    Text("${humidity.value}%")
-    Spacer(Modifier.height(4.dp))
-    Text(
-      text = "Humidity",
-      style = MaterialTheme.typography.caption
-    )
-  }
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("${humidity.value}%")
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = "Humidity",
+            style = MaterialTheme.typography.caption
+        )
+    }
 }
 
 @Preview
 @Composable
 private fun HourlyWeatherDetailsPreview() {
-  val weather = WeatherAtTime(
-    temp = DegreesFahrenheit(43),
-    humidity = Percent(81),
-    airQuality = AirQualityIndex(31),
-    wind = Wind(
-      speed = MilesPerHour(2),
-      direction = WindDirection.Northeast
-    ),
-    precipitation = Precipitation(
-      chance = Percent(20),
-      type = PrecipitationType.Rain,
-      amount = Inches(0.2)
-    ),
-    weatherType = WeatherType.Sunny
-  )
-  WeatherTheme {
-    Surface {
-      HourlyWeatherDetails(
-        modifier = Modifier.fillMaxWidth(),
-        weather = weather,
-        units = WeatherUnits.Imperial
-      )
+    val weather = WeatherAtTime(
+        temp = DegreesFahrenheit(43),
+        humidity = Percent(81),
+        airQuality = AirQualityIndex(31),
+        wind = Wind(
+            speed = MilesPerHour(2),
+            direction = WindDirection.Northeast
+        ),
+        precipitation = Precipitation(
+            chance = Percent(20),
+            type = PrecipitationType.Rain,
+            amount = Inches(0.2)
+        ),
+        weatherType = WeatherType.Sunny
+    )
+    WeatherTheme {
+        Surface {
+            HourlyWeatherDetails(
+                modifier = Modifier.fillMaxWidth(),
+                weather = weather,
+                units = WeatherUnits.Imperial
+            )
+        }
     }
-  }
 }
