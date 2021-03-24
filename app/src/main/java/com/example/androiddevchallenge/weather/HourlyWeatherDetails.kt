@@ -34,6 +34,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.androiddevchallenge.R
@@ -110,8 +112,9 @@ private fun Precipitation(
     precipitation: Precipitation,
     units: WeatherUnits
 ) {
+    val accumulation = units.formatAccumulation(precipitation.amount)
     Column(
-        modifier = modifier,
+        modifier = modifier.semantics(mergeDescendants = true) {},
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row {
@@ -122,7 +125,7 @@ private fun Precipitation(
             )
         }
         Spacer(Modifier.height(4.dp))
-        Text(units.formatAccumulation(precipitation.amount))
+        Text(accumulation)
     }
 }
 
@@ -151,7 +154,7 @@ private fun Wind(
     units: WeatherUnits
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.semantics(mergeDescendants = true) {},
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row {
@@ -196,7 +199,9 @@ private fun AirQualityIndex(
     aqi: AirQualityIndex
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.semantics(mergeDescendants = true) {
+            contentDescription = "Air Quality Index of ${aqi.value}, which is ${aqi.label().displayText}"
+        },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "${aqi.value} ${aqi.label().displayText}")
@@ -214,7 +219,7 @@ private fun Humidity(
     humidity: Percent
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.semantics(mergeDescendants = true) {},
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("${humidity.value}%")
